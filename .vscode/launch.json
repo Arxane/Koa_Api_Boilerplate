@@ -1,0 +1,27 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "koa2",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/src/index.ts",
+            "stopOnEntry": false,
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "outFiles": ["${workspaceRoot}/build/*.js"],
+            "runtimeExecutable": "nodemon",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "sourceMaps": true,
+            "restart": true
+        }
+    ]
+}
