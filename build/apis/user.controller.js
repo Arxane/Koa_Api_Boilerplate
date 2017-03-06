@@ -20,6 +20,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Mongoose = require("mongoose");
 const Koa = require("koa");
 const router_1 = require("../middleware/router");
+const auth_1 = require("../middleware/auth");
 const UserModel = Mongoose.model('User');
 function someFun(ctx, next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -44,8 +45,11 @@ let UserController = class UserController {
         return __awaiter(this, void 0, void 0, function* () {
             let _user = ctx.request.body;
             let newUser = new UserModel(_user);
-            const user = yield newUser.save();
-            ctx.body = user;
+            let user = yield newUser.save();
+            ctx.body = {
+                token: auth_1.signToken(user.id),
+                username: user.username
+            };
         });
     }
     loginUser(ctx) {
@@ -60,7 +64,6 @@ __decorate([
         path: '/findOne/:username'
     }),
     router_1.required({ params: 'username' }),
-    router_1.convert(someFun),
     router_1.log,
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -80,7 +83,8 @@ __decorate([
 __decorate([
     router_1.router({
         method: 'post',
-        path: '/register'
+        path: '/register',
+        unless: true
     }),
     router_1.log,
     __metadata("design:type", Function),
@@ -90,7 +94,8 @@ __decorate([
 __decorate([
     router_1.router({
         method: 'post',
-        path: '/login'
+        path: '/login',
+        unless: true
     }),
     router_1.log,
     __metadata("design:type", Function),

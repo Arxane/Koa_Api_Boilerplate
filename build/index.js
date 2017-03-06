@@ -20,7 +20,7 @@ app.use(convert(cors({
     origin: true,
     credentials: true
 })));
-router.registerRouters(`${__dirname}/apis`);
+router.registerRouters(`${__dirname}/apis`, config_1.default.get('jwt').secret);
 app.on('error', (err, ctx) => {
     logger_1.default(ctx).error(err.message);
 });

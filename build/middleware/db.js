@@ -2,9 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Mongoose = require("mongoose");
 const index_1 = require("./../model/user/index");
-const mongoose_1 = require("mongoose");
 function init(config) {
-    Mongoose.Promise = mongoose_1.Promise;
+    Mongoose.Promise = global.Promise;
     Mongoose.connect(config.host);
     let mongoDb = Mongoose.connection;
     mongoDb.on('error', () => {

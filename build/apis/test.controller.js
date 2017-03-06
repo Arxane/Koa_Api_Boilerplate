@@ -29,7 +29,8 @@ let TestController = class TestController {
 __decorate([
     router_1.router({
         'method': 'get',
-        'path': '/haha'
+        'path': '/haha',
+        'unless': true
     }),
     router_1.required({
         'query': ['username', 'age']

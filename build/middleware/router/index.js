@@ -24,12 +24,11 @@ function prefix(prefix) {
 exports.prefix = prefix;
 function router(config) {
     return (target, name, value) => {
-        const prefix = target.constructor.prefix || '';
-        const path = prefix + config.path;
         Route_1.Route.__DecoratedRouters.set({
             target: target,
-            path: path,
-            method: config.method
+            path: config.path,
+            method: config.method,
+            unless: config.unless
         }, target[name]);
     };
 }
