@@ -3,6 +3,7 @@ import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import * as glob from 'glob';
 import * as path from "path";
+import * as jwt from 'koa-jwt';
 
 const router = new Router();
 
@@ -19,7 +20,7 @@ export const symbolRoutePrefix:symbol = Symbol("routePrefix");
  */
 export class Route {
     // Static storage of the modified route
-    static __DecoratedRouters: Map<{target: any, method: string, path: string}, Function | Function[]> = new Map();
+    static __DecoratedRouters: Map<{target: any, method: string, path: string, unless?: boolean}, Function | Function[]> = new Map();
     private router: any;
     private app: Koa;
 
@@ -43,9 +44,11 @@ export class Route {
      *
      * @memberOf Route
      */
-    registerRouters(controllerDir: string) {
+    registerRouters(controllerDir: string, secrets: string) {
         // Load the api interface and use sync to load
         glob.sync(path.join(controllerDir, './*.js')).forEach((item)=>require(item));
+        // A collection of routes that are not verified
+        let unlessPath = [];
         // Configure routing
         for(let [config, controller] of Route.__DecoratedRouters) {
             let controllers = Array.isArray(controller) ? controller : [controller];
@@ -55,8 +58,14 @@ export class Route {
             }
             // Splicing api routing
             let routerPath = prefixPath + config.path;
+            
+            // The route collection is ignored
+            if(config.unless) {
+                unlessPath.push(routerPath);
+            }
             controllers.forEach((controller) => this.router[config.method](routerPath, controller));
         }
+        this.app.use(jwt({secret: secrets}).unless({ path: unlessPath}));
         this.app.use(this.router.routes());
         this.app.use(this.router.allowedMethods());
     }

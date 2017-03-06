@@ -2,6 +2,7 @@
 import * as Mongoose from "mongoose";
 import * as Koa from 'koa';
 import {router, required, prefix, convert, log} from '../middleware/router';
+import {signToken} from '../middleware/auth';
 const UserModel = Mongoose.model('User');
 
 //Middleware test
@@ -19,7 +20,6 @@ class UserController {
         path: '/findOne/:username'
     })
     @required({params: 'username'})
-    @convert(someFun)
     @log
     async getUserOne (ctx: Koa.Context): Promise<void> {
         let user = await UserModel.findOne({username: ctx.params.username});
@@ -38,10 +38,11 @@ class UserController {
         ctx.body = userList;
     }
 
-    //http://localhost:8083/user/register?username=test&&password=15&&email=test@test.com
+    //http://localhost:8083/user/register
     @router({
         method: 'post',
-        path: '/register'
+        path: '/register',
+        unless: true
     })
     @log
     async saveUser (ctx: Koa.Context): Promise<void> {
@@ -49,13 +50,17 @@ class UserController {
         // Instantiate a new user model
         let newUser = new UserModel(_user);
         // Storage
-        const user = await newUser.save();
-        ctx.body = user;
+        let user:any = await newUser.save();
+        ctx.body = {
+            token: signToken(user.id),
+            username: user.username
+        };
     }
 
     @router({
         method: 'post',
-        path: '/login'
+        path: '/login',
+        unless: true
     })
     @log
     async loginUser (ctx: Koa.Context): Promise<void> {

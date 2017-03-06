@@ -37,17 +37,14 @@ export function prefix (prefix: string) {
  *  path: '/login/:id'
  * })
  */
-export function router(config: {path: string, method: string}) {
+export function router(config: {path: string, method: string, unless?: boolean}) {
     return (target: any, name: string, value: PropertyDescriptor) => {
-        // Get the static attribute of the class, that is, the defined router prefix
-        const prefix = target.constructor.prefix || '';
-        // Call static attribute, splice route
-        const path = prefix + config.path;
         // Map type setting value
         Route.__DecoratedRouters.set({
             target: target,
-            path: path,
-            method: config.method
+            path: config.path,
+            method: config.method,
+            unless: config.unless
         }, target[name]);
     }
 }

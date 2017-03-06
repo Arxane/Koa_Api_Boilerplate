@@ -12,7 +12,7 @@
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
-            "outFiles": ["${workspaceRoot}/build/*.js"],
+            "outFiles": ["${workspaceRoot}/build/**/*.js"],
             "runtimeExecutable": "nodemon",
             "runtimeArgs": [
                 "--nolazy"

@@ -14,7 +14,7 @@ export interface Database {
 }
 
 export function init(config: DbConfig): Database {
-    (<any>Mongoose).Promise = Promise;
+    (<any>Mongoose).Promise = global.Promise
     Mongoose.connect(config.host);
 
     let mongoDb = Mongoose.connection;

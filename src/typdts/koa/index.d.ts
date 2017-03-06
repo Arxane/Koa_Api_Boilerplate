@@ -3,10 +3,12 @@
  * This code appends a params field to the interface
  */
 import * as Koa from "koa";
+import * as compose from 'koa-compose';
 
 declare module "koa" {
     interface Context {
-        params: any; //koa-router
         ip: any;
+        params: any;
+        otherArgs: any;
     }
 }
