@@ -26,13 +26,13 @@ app.use(convert(Json()));
 app.use(BodyParser());
 app.use(koaError);
 
-// jwt
-router.registerRouters(`${__dirname}/apis`, config.get('jwt').secret);;
-
 app.use(convert(cors({
     origin: true,
     credentials: true
 })));
+
+// jwt
+router.registerRouters(`${__dirname}/apis`, config.get('jwt').secret);
 
 app.on('error', (err:any, ctx:Koa.Context) => {
     logger(ctx).error(err.message);
